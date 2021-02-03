@@ -1,7 +1,7 @@
 # flask-tea
 Flask Web API Wheel.
 
-## 目录结构
+## 项目结构
 - /app 应用包
   - /api 接口包
   - /config 配置包
