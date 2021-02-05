@@ -7,6 +7,7 @@ import os
 
 
 class BaseConfig(object):
+    APP_NAME = os.getenv('APP_NAME', 'FLASK-TEA')
     # --- 密钥配置 ---
     SECRET_KEY = os.getenv('SECRET_KEY', 'Hello, Flask-Tea!!!')
     EXPIRES_IN = 86400 * 30

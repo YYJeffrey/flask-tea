@@ -18,3 +18,19 @@ Flask Web API Wheel.
 - starter.py 启动文件
 
 **包名规范：** 一律使用小写单数形式
+
+## 环境变量
+|参数|作用|
+|---|---|
+|APP_NAME|应用名称|
+|SECRET_KEY|项目密钥|
+|SQLALCHEMY_DATABASE_URI|数据库URI
+
+## 开始使用
+```
+flask run
+flask routes
+flask db init
+flask db migrate
+flask db upgrade
+```
