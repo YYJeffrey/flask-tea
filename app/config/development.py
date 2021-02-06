@@ -7,5 +7,5 @@ from .base import BaseConfig
 
 
 class DevelopmentConfig(BaseConfig):
-    # 启用SQL语句回显
+    # 是否启用SQL语句回显
     SQLALCHEMY_ECHO = True
