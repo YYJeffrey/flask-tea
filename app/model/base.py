@@ -7,7 +7,10 @@ from uuid import uuid4
 
 from sqlalchemy import Column, String, DateTime, func, orm, inspect
 
-from app import db
+from app.lib.exception import NotFound
+from app.patch.db import SQLAlchemy, BaseQuery
+
+db = SQLAlchemy(query_class=BaseQuery)
 
 
 class BaseModel(db.Model):
@@ -18,87 +21,77 @@ class BaseModel(db.Model):
     update_time = Column('update_time', DateTime, onupdate=func.now(), comment='更新时间')
     delete_time = Column('delete_time', DateTime, comment='删除时间')
 
+    def __getitem__(self, key):
+        return getattr(self, key)
+
     @orm.reconstructor
     def init_on_load(self):
         """
-        初始化
+        无法直接调用__init__ 需加装饰器
         """
-        # 所有字段
-        self._fields = []
-        # 排除字段
-        self._exclude = []
+        self._fields = ['status']
+        self._exclude = ['delete_time', 'update_time']
 
-        self.set_fields()
-        self.__prune_fields()
+        self.__set_fields()
 
-    def __prune_fields(self):
-        """
-        修剪字段
-        """
+    def __set_fields(self):
         columns = inspect(self.__class__).columns
-        if not self._fields:
-            all_columns = set([column.name for column in columns])
-            self._fields = list(all_columns - set(self._exclude))
-
-    def set_fields(self):
-        """
-        设置字段
-        """
-        pass
+        all_columns = set([column.name for column in columns])
+        self._fields.extend(list(all_columns - set(self._exclude)))
 
     def keys(self):
         return self._fields
 
-    def hide(self, *args):
-        for key in args:
-            self._fields.remove(key)
+    def hide(self, *keys):
+        for key in keys:
+            hasattr(self, key) and self._fields.remove(key)
         return self
 
-    def __getitem__(self, key):
-        return getattr(self, key)
+    def append(self, *keys):
+        for key in keys:
+            hasattr(self, key) and self._fields.append(key)
+        return self
 
     @property
     def status(self):
         return not self.delete_time
 
     @classmethod
+    def get_or_404(cls, **kwargs):
+        rv = cls.query.filter_by(**kwargs).first()
+        if not rv:
+            raise NotFound
+        return rv
+
+    @classmethod
+    def all_or_404(cls, **kwargs):
+        rv = cls.query.filter_by(**kwargs).all()
+        if not rv:
+            raise NotFound
+        return rv
+
+    @classmethod
     def get_one(cls, **kwargs):
-        """
-        查询一条记录
-        """
         return cls.query.filter_by(**kwargs).first()
 
     @classmethod
     def get_all(cls, **kwargs):
-        """
-        查询所有记录
-        """
         return cls.query.filter_by(**kwargs).all()
 
     @classmethod
     def create(cls, commit: bool = True, **kwargs):
-        """
-        新增一条记录
-        """
         instance = cls()
         for attr, value in kwargs.items():
-            if hasattr(instance, attr):
-                setattr(instance, attr, value)
+            hasattr(instance, attr) and setattr(instance, attr, value)
         return instance.save(commit)
 
     def update(self, commit: bool = True, **kwargs):
-        """
-        更新一条记录
-        """
         for attr, value in kwargs.items():
-            if hasattr(self, attr):
-                setattr(self, attr, value)
+            hasattr(self, attr) and setattr(self, attr, value)
         return self.save(commit)
 
     def delete(self, commit: bool = True, soft: bool = True):
-        """
-        删除一条记录 默认软删除
-        """
+        # 默认软删除
         if soft:
             self.delete_time = func.now()
             self.save()
@@ -107,10 +100,6 @@ class BaseModel(db.Model):
         commit and db.session.commit()
 
     def save(self, commit: bool = True):
-        """
-        保存修改记录
-        """
         db.session.add(self)
-        if commit:
-            db.session.commit()
+        commit and db.session.commit()
         return self
