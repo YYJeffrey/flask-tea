@@ -34,10 +34,10 @@ class Pagination(_Pagination):
 class BaseQuery(_BaseQuery):
     def filter_by(self, soft_del: bool = False, **kwargs):
         """
-        默认查询未被软删除的记录
+        查询未被软删除的记录
         """
         if not soft_del:
-            kwargs["delete_time"] = None
+            kwargs['delete_time'] = None
         return super(BaseQuery, self).filter_by(**kwargs)
 
     def paginate(self, page=None, size=None, error_out=True, max_per_page=None):
