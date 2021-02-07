@@ -6,9 +6,9 @@
 from collections import namedtuple
 
 from flask import request
-from wtforms import Form as _Form
+from wtforms import Form as _Form, SelectField as _SelectField
 from wtforms.compat import string_types
-from wtforms.validators import StopValidation, DataRequired as _DataRequired
+from wtforms.validators import StopValidation, DataRequired as _DataRequired, Optional as _Optional
 
 from app.lib.exception import ParameterError
 
@@ -20,6 +20,9 @@ class Form(_Form):
         super(Form, self).__init__(data=data, **args)
 
     def validate_for_api(self):
+        """
+        处理异常 拼接异常信息
+        """
         valid = super(Form, self).validate()
         if not valid:
             msg = ''
@@ -49,10 +52,16 @@ class Form(_Form):
 
     @property
     def dt_data(self):
+        """
+        返回dict类型
+        """
         return self._data._asdict()
 
     @property
     def nt_data(self):
+        """
+        返回namedtuple类型
+        """
         return self._data
 
 
@@ -69,3 +78,24 @@ class DataRequired(_DataRequired):
 
             field.errors[:] = []
             raise StopValidation(message)
+
+
+class Optional(_Optional):
+    def __call__(self, form, field):
+        if field.data:
+            return
+
+        if not field.raw_data or isinstance(field.raw_data[0], string_types) and not self.string_check(
+                field.raw_data[0]):
+            field.errors[:] = []
+            raise StopValidation()
+
+
+class SelectField(_SelectField):
+    def pre_validate(self, form):
+        if self.validate_choice:
+            for _, _, match in self.iter_choices():
+                if match:
+                    break
+            else:
+                raise ValueError(self.gettext("枚举选项有误"))
