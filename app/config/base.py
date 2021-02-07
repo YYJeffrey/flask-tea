@@ -10,7 +10,7 @@ class BaseConfig(object):
     # --- 基础配置 ---
     # APP名称 用于请求头校验
     APP_NAME = os.getenv('APP_NAME', 'FLASK-TEA')
-    # 是否按RESTFul风格返回状态码
+    # 是否按REST风格返回状态码
     RESTFUL_HTTP_CODE = False
 
     # --- 密钥配置 ---
