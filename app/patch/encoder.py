@@ -16,13 +16,13 @@ class JSONEncoder(_JSONEncoder):
         if isinstance(o, (int, list, set, tuple)):
             return json.dumps(o, cls=JSONEncoder)
         if isinstance(o, datetime):
-            return o.strftime("%Y-%m-%d %H:%M:%S")
+            return o.strftime('%Y-%m-%d %H:%M:%S')
         if isinstance(o, date):
-            return o.strftime("%Y-%m-%d")
+            return o.strftime('%Y-%m-%d')
         if isinstance(o, Enum):
             return o.value
         if isinstance(o, Decimal):
             return json.dumps(o, use_decimal=True)
-        if hasattr(o, "keys") and hasattr(o, "__getitem__"):
+        if hasattr(o, 'keys') and hasattr(o, '__getitem__'):
             return dict(o)
         return JSONEncoder.default(self, o)
