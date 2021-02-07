@@ -16,7 +16,7 @@ db = SQLAlchemy(query_class=BaseQuery)
 class BaseModel(db.Model):
     __abstract__ = True
 
-    id = Column('id', String(36), default=lambda: uuid4().hex, primary_key=True, comment='主键标识')
+    id = Column('id', String(36), default=uuid4().hex, primary_key=True, comment='主键标识')
     create_time = Column('create_time', DateTime, server_default=func.now(), comment='创建时间')
     update_time = Column('update_time', DateTime, onupdate=func.now(), comment='更新时间')
     delete_time = Column('delete_time', DateTime, comment='删除时间')
@@ -27,7 +27,7 @@ class BaseModel(db.Model):
     @orm.reconstructor
     def init_on_load(self):
         """
-        无法直接调用__init__ 需加装饰器
+        无法直接调用构造函数 需使用装饰器
         """
         self._fields = ['status']
         self._exclude = ['delete_time', 'update_time']
@@ -90,16 +90,18 @@ class BaseModel(db.Model):
             hasattr(self, attr) and setattr(self, attr, value)
         return self.save(commit)
 
+    def save(self, commit: bool = True):
+        db.session.add(self)
+        commit and db.session.commit()
+        return self
+
     def delete(self, commit: bool = True, soft: bool = True):
-        # 默认软删除
+        """
+        删除 默认使用软删除
+        """
         if soft:
             self.delete_time = func.now()
             self.save()
         else:
             db.session.delete(self)
         commit and db.session.commit()
-
-    def save(self, commit: bool = True):
-        db.session.add(self)
-        commit and db.session.commit()
-        return self

@@ -25,7 +25,7 @@ class APIException(HTTPException):
         if headers:
             self.headers = headers
 
-        # 状态码返回风格判断
+        # 状态码返回风格
         if current_app.config['RESTFUL_HTTP_CODE']:
             if code:
                 self.code = code
@@ -93,14 +93,14 @@ class Duplicated(APIException):
 
 class NotFound(APIException):
     code = 404
-    msg_code = 1010
-    msg = '未查询到数据'
+    msg_code = 1003
+    msg = '对象未找到'
 
 
 class ServerError(APIException):
     code = 500
     msg_code = 9999
-    msg = '服务器端异常'
+    msg = '服务器异常'
 
 
 # --- 权限相关 10000~10099 ---
@@ -118,20 +118,26 @@ class TokenInvalid(APIException):
 
 class TokenExpired(APIException):
     code = 401
-    msg_code = 10020
+    msg_code = 10011
     msg = 'Token过期'
 
 
-class MethodNotAllowed(APIException):
+class HeaderInvalid(APIException):
     code = 401
-    msg_code = 10030
-    msg = '方法不被允许'
+    msg_code = 10012
+    msg = '请求头不合法'
 
 
 class Forbidden(APIException):
     code = 403
-    msg_code = 10099
+    msg_code = 10020
     msg = '权限不足'
+
+
+class MethodNotAllowed(APIException):
+    code = 405
+    msg_code = 10030
+    msg = '方法不被允许'
 
 
 # --- 文件相关 10100~10199 ---

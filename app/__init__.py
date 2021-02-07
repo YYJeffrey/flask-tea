@@ -4,15 +4,18 @@
     :license: MIT, see LICENSE for more details.
 """
 from dotenv import load_dotenv
-from flask import Flask
+from flask import Flask, request
 from flask_cors import CORS
 from flask_migrate import Migrate
+from werkzeug.exceptions import HTTPException
 
-from app.patch.db import SQLAlchemy, BaseQuery
+from .lib.exception import APIException, ServerError, HeaderInvalid
+from .model.base import db
+from .model.user import User
+from .patch.encoder import JSONEncoder
 
-db = SQLAlchemy(query_class=BaseQuery)
 migrate = Migrate(db=db)
-cors = CORS(resources={"/*": {"origins": "*"}})
+cors = CORS(resources={'/*': {'origins': '*'}})
 
 
 def create_app():
@@ -22,22 +25,54 @@ def create_app():
 
     register_config(app)
     register_extension(app)
+    register_request(app)
+    register_exception(app)
+    register_encoder(app)
+    register_resource(app)
 
     return app
 
 
 def register_config(app):
-    """
-    注册配置
-    """
     flask_env = app.config.get('ENV')
     app.config.from_object(f"app.config.{flask_env}.{flask_env.capitalize()}Config")
 
 
 def register_extension(app):
-    """
-    注册拓展
-    """
     db.init_app(app)
     migrate.init_app(app)
     cors.init_app(app)
+
+
+def register_request(app):
+    @app.before_request
+    def header_validator():
+        if 'APP_NAME' in app.config:
+            if 'X-App-Name' in request.headers:
+                if request.headers['X-App-Name'] != app.config['APP_NAME']:
+                    raise HeaderInvalid
+            else:
+                raise HeaderInvalid
+
+
+def register_exception(app):
+    @app.errorhandler(Exception)
+    def handle_error(e):
+        if isinstance(e, APIException):
+            return e
+        elif isinstance(e, HTTPException):
+            return APIException(code=e.code, msg=e.name)
+        else:
+            if not app.config['DEBUG']:
+                return ServerError()
+            raise e
+
+
+def register_encoder(app):
+    app.json_encoder = JSONEncoder
+
+
+def register_resource(app):
+    from .api.v1 import create_v1
+
+    app.register_blueprint(create_v1(), url_prefix='/v1')
