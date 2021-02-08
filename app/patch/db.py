@@ -32,22 +32,22 @@ class Pagination(_Pagination):
 
 
 class BaseQuery(_BaseQuery):
-    def filter_by(self, soft_del: bool = False, **kwargs):
+    def filter_by(self, not_del: bool = True, **kwargs):
         """
         查询未被软删除的记录
         """
-        if not soft_del:
+        if not_del:
             kwargs['delete_time'] = None
         return super(BaseQuery, self).filter_by(**kwargs)
 
-    def paginate(self, page=None, size=None, error_out=True, max_per_page=None):
-        paginator = super(BaseQuery, self).paginate(
-            page=page, per_page=size, error_out=error_out, max_per_page=max_per_page
-        )
-        return Pagination(
-            self,
-            paginator.page,
-            paginator.per_page,
-            paginator.total,
-            paginator.items
-        )
+    def paginate(self, page=1, size=20, error_out=True, max_per_page=None):
+        """
+        覆写分页
+        """
+        if max_per_page is not None:
+            size = min(size, max_per_page)
+
+        items = self.limit(size).offset((page - 1) * size).all()
+        total = self.order_by(None).count()
+
+        return Pagination(self, page, size, total, items)

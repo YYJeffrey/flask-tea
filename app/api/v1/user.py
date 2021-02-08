@@ -6,6 +6,7 @@
 from app import User
 from app.lib.exception import Success, Created, Updated, Deleted, Duplicated
 from app.lib.red_print import RedPrint
+from app.lib.util import get_paginator_schema
 from app.validator.forms import CreateUserValidator, UpdateUserValidator
 
 api = RedPrint('user')
@@ -14,10 +15,10 @@ api = RedPrint('user')
 @api.route('', methods=['GET'])
 def get_users():
     """
-    查询所有用户
+    分页查询用户
     """
-    users = User.all_or_404()
-    return Success(data=users)
+    pagination = User.get_pagination().append('update_time')
+    return Success(data=get_paginator_schema(pagination))
 
 
 @api.route('/<user_id>', methods=['GET'])
@@ -27,6 +28,15 @@ def get_user(user_id):
     """
     user = User.get_or_404(id=user_id)
     return Success(data=user)
+
+
+@api.route('/list', methods=['GET'])
+def get_all_user():
+    """
+    查询所有用户
+    """
+    users = User.all_or_404()
+    return Success(data=users)
 
 
 @api.route('', methods=['POST'])

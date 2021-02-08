@@ -9,6 +9,7 @@ from sqlalchemy import Column, String, DateTime, func, orm, inspect
 
 from app.lib.exception import NotFound
 from app.patch.db import SQLAlchemy, BaseQuery
+from app.validator.forms import PaginateValidator
 
 db = SQLAlchemy(query_class=BaseQuery)
 
@@ -105,3 +106,17 @@ class BaseModel(db.Model):
         else:
             db.session.delete(self)
         commit and db.session.commit()
+
+    @classmethod
+    def get_pagination(cls, not_del: bool = True):
+        """
+        分页调用
+        """
+        validator = PaginateValidator().dt_data
+        page = validator.get('page')
+        size = validator.get('size')
+
+        paginator = cls.query
+        if not_del:
+            paginator = paginator.filter_by(delete_time=None)
+        return paginator.order_by(cls.create_time.desc()).paginate(page=page, size=size)
