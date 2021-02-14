@@ -110,6 +110,12 @@ class UnAuthentication(APIException):
     msg = '未授权访问'
 
 
+class PasswordInvalid(APIException):
+    code = 401
+    msg_code = 10009
+    msg = '用户名或密码错误'
+
+
 class TokenInvalid(APIException):
     code = 401
     msg_code = 10010

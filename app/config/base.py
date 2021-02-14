@@ -15,7 +15,7 @@ class BaseConfig(object):
 
     # --- 密钥配置 ---
     SECRET_KEY = os.getenv('SECRET_KEY', 'Hello, Flask-Tea!!!')
-    EXPIRES_IN = 86400 * 30
+    EXPIRES_IN = 86400 * 7
 
     # --- SQLAlchemy配置 ---
     SQLALCHEMY_DATABASE_URI = os.getenv(

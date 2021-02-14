@@ -6,6 +6,7 @@
 from app import User
 from app.lib.exception import Success, Created, Updated, Deleted, Duplicated
 from app.lib.red_print import RedPrint
+from app.lib.token_auth import auth
 from app.lib.util import get_paginator_schema
 from app.validator.forms import CreateUserValidator, UpdateUserValidator
 
@@ -13,6 +14,7 @@ api = RedPrint('user')
 
 
 @api.route('', methods=['GET'])
+@auth.login_required
 def get_users():
     """
     分页查询用户

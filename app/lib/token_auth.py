@@ -14,7 +14,10 @@ auth = HTTPTokenAuth(scheme='Token')
 
 @auth.verify_token
 def verify_token(token):
-    s = Serializer(current_app.config['SECRET_KEY'])
+    s = Serializer(
+        secret_key=current_app.config['SECRET_KEY'],
+        expires_in=current_app.config['EXPIRES_IN']
+    )
     try:
         data = s.loads(token)
     except BadSignature:
@@ -23,3 +26,14 @@ def verify_token(token):
         raise TokenExpired
     g.user_id = data['user_id']
     return True
+
+
+def generate_token(user_id):
+    s = Serializer(
+        secret_key=current_app.config['SECRET_KEY'],
+        expires_in=current_app.config['EXPIRES_IN']
+    )
+    token = s.dumps({
+        'user_id': user_id,
+    })
+    return token.decode('ascii')
