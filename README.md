@@ -73,3 +73,10 @@ flask routes
 # 运行项目
 flask run
 ```
+
+## 前端调用
+填写请求头
+```shell script
+X-App-Name: FLASK-TEA
+Authorization: Token eyJhbGciOiJIUzUxMiIsImlhdCI6MTYxMzI3OTgzMywiZXhwIjoxNjEzODg0NjMzfQ.eyJ1c2VyX2lkIjoiNzZkMGUzMWQwOGJmNDFkZGEyYzRmYTc1Nzg4NjVlZGMifQ.Fls-CVfHRYKYae7cu01pBqTzZu9Zt6HGM_BQkXas5pMF039XhUwuWr6xlEd_vKVmhVEzUFFGfQgJ4tUnXCQ5Zw
+```
