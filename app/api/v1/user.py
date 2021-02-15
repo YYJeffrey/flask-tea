@@ -6,7 +6,7 @@
 from app import User
 from app.lib.exception import Success, Created, Updated, Deleted, Duplicated
 from app.lib.red_print import RedPrint
-from app.lib.token_auth import auth
+from app.lib.token import auth
 from app.lib.util import get_paginator_schema
 from app.validator.forms import CreateUserValidator, UpdateUserValidator
 
@@ -52,8 +52,7 @@ def update_user(user_id):
     更新指定用户
     """
     form = UpdateUserValidator()
-    user = User.get_or_404(id=user_id)
-    user.update(**form.dt_data)
+    User.get_or_404(id=user_id).update(**form.dt_data)
     return Updated()
 
 

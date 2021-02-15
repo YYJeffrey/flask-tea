@@ -7,7 +7,7 @@ from werkzeug.security import check_password_hash
 
 from app import User
 from app.lib.exception import NotFound, PasswordInvalid
-from app.lib.token_auth import generate_token
+from app.lib.token import generate_token
 
 
 def password_auth(username, password):

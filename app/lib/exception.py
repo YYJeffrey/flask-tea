@@ -67,7 +67,7 @@ class Updated(APIException):
 
 
 class Deleted(APIException):
-    code = 201
+    code = 202
     msg_code = 3
     msg = '删除成功'
 
