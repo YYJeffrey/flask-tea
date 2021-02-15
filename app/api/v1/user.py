@@ -19,7 +19,7 @@ def get_users():
     """
     分页查询用户
     """
-    pagination = User.get_pagination().append('update_time')
+    pagination = User.get_pagination().append('update_time', 'delete_time')
     return Success(data=get_paginator_schema(pagination))
 
 
@@ -30,15 +30,6 @@ def get_user(user_id):
     """
     user = User.get_or_404(id=user_id)
     return Success(data=user)
-
-
-@api.route('/list', methods=['GET'])
-def get_all_user():
-    """
-    查询所有用户
-    """
-    users = User.all_or_404()
-    return Success(data=users)
 
 
 @api.route('', methods=['POST'])

@@ -11,10 +11,10 @@ from app.validator.forms import PasswordAuthValidator
 api = RedPrint('auth')
 
 
-@api.route('', methods=['POST'])
-def auth():
+@api.route('/login', methods=['POST'])
+def login():
     """
-    授权
+    授权登录
     """
     form = PasswordAuthValidator()
     data = password_auth(
