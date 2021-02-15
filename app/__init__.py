@@ -3,6 +3,9 @@
     :copyright: (c) 2021 by Jeffrey.
     :license: MIT, see LICENSE for more details.
 """
+import logging
+from logging.handlers import RotatingFileHandler
+
 from dotenv import load_dotenv
 from flask import Flask, request
 from flask_cors import CORS
@@ -24,6 +27,7 @@ def create_app():
     app = Flask(__name__, static_folder='./static', template_folder='./template')
 
     register_config(app)
+    register_logging(app)
     register_extension(app)
     register_request(app)
     register_exception(app)
@@ -36,6 +40,14 @@ def create_app():
 def register_config(app):
     flask_env = app.config.get('ENV')
     app.config.from_object(f"app.config.{flask_env}.{flask_env.capitalize()}Config")
+
+
+def register_logging(app):
+    formatter = logging.Formatter('%(asctime)s %(levelname)s %(filename)s:%(lineno)d %(message)s')
+    handler = RotatingFileHandler('log/app.log', maxBytes=10 * 1024 * 1024, backupCount=100, encoding='UTF-8')
+    handler.setFormatter(formatter)
+    handler.setLevel(app.config['LOG_LEVEL'])
+    app.logger.addHandler(handler)
 
 
 def register_extension(app):
