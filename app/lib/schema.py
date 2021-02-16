@@ -6,7 +6,7 @@
 from app.patch.db import Pagination
 
 
-def get_paginator_schema(pagination: Pagination = None):
+def paginator_schema(pagination: Pagination):
     return {
         'total_size': pagination.total,
         'next_page': pagination.next_num,

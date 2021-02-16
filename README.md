@@ -10,7 +10,7 @@ Flask Web API Wheel.
     - exception.py 异常处理模块
     - red_print.py 红图模块
     - token.py 令牌模块
-    - util.py 通用工具模块
+    - schema.py 视图结构模块
   - /model 模型包
   - /patch 补丁包
   - /service 业务包
