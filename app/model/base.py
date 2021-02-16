@@ -25,6 +25,11 @@ class BaseModel(db.Model):
     def __getitem__(self, key):
         return getattr(self, key)
 
+    def __set_fields(self):
+        columns = inspect(self.__class__).columns
+        all_columns = set([column.name for column in columns])
+        self._fields.extend(list(all_columns - set(self._exclude)))
+
     @orm.reconstructor
     def init_on_load(self):
         """
@@ -34,11 +39,6 @@ class BaseModel(db.Model):
         self._exclude = ['delete_time', 'update_time']
 
         self.__set_fields()
-
-    def __set_fields(self):
-        columns = inspect(self.__class__).columns
-        all_columns = set([column.name for column in columns])
-        self._fields.extend(list(all_columns - set(self._exclude)))
 
     def keys(self):
         return self._fields

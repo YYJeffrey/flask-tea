@@ -98,4 +98,4 @@ class SelectField(_SelectField):
                 if match:
                     break
             else:
-                raise ValueError(self.gettext("枚举选项有误"))
+                raise ValueError(self.gettext('枚举选项有误'))

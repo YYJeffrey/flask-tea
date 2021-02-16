@@ -7,7 +7,7 @@ from app import User
 from app.lib.exception import Success, Created, Updated, Deleted, Duplicated
 from app.lib.red_print import RedPrint
 from app.lib.token import auth
-from app.lib.util import get_paginator_schema
+from app.lib.schema import paginator_schema
 from app.validator.forms import CreateUserValidator, UpdateUserValidator
 
 api = RedPrint('user')
@@ -20,7 +20,7 @@ def get_users():
     分页查询用户
     """
     pagination = User.get_pagination().append('update_time', 'delete_time')
-    return Success(data=get_paginator_schema(pagination))
+    return Success(data=paginator_schema(pagination))
 
 
 @api.route('/<user_id>', methods=['GET'])
@@ -38,8 +38,7 @@ def create_user():
     创建用户
     """
     form = CreateUserValidator()
-    user = User.get_one(username=form.get_data('username'))
-    if user:
+    if User.get_one(username=form.get_data('username')):
         raise Duplicated
 
     User.create(**form.dt_data)

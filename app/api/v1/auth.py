@@ -23,6 +23,6 @@ def login():
     password = form.get_data('password')
 
     data = password_auth(username, password)
-    current_app.logger.info(f'用户: {username}, 登录成功！')
+    current_app.logger.info(f"用户: {username}, 登录成功！")
 
     return Success(data=data)
