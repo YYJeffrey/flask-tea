@@ -49,6 +49,12 @@ def register_logging(app):
     handler.setLevel(app.config['LOG_LEVEL'])
     app.logger.addHandler(handler)
 
+    @app.before_first_request
+    def setup_logging():
+        if not app.debug:
+            app.logger.addHandler(logging.StreamHandler())
+            app.logger.setLevel(app.config['LOG_LEVEL'])
+
 
 def register_extension(app):
     db.init_app(app)
@@ -75,7 +81,7 @@ def register_exception(app):
         elif isinstance(e, HTTPException):
             return APIException(code=e.code, msg=e.name)
         else:
-            if not app.config['DEBUG']:
+            if not app.debug:
                 return ServerError()
             raise e
 
