@@ -58,7 +58,7 @@ Flask Web API Wheel.
 
     创建一个名为 **tea** 的数据库，字符集 **utf8mb4**，排序规则 **utf8mb4_general_ci**
 
-## 开始使用
+## 开发使用
 ```shell script
 # 初始化数据库
 flask db init
@@ -74,6 +74,14 @@ flask routes
 
 # 运行项目
 flask run
+```
+
+## 生产使用
+```shell script
+# 运行
+gunicorn -c gconfig.py starter:app
+# 停止
+ps aux | grep gunicorn | awk '{print $2}' | xargs kill -9
 ```
 
 ## 前端调用
