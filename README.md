@@ -80,8 +80,21 @@ flask run
 ```shell script
 # 运行
 gunicorn -c gconfig.py starter:app
+
 # 停止
 ps aux | grep gunicorn | awk '{print $2}' | xargs kill -9
+```
+
+## Docker部署
+```shell script
+# 导出依赖
+pipenv lock -r >> requirements.txt
+
+# 构建Dockerfile
+docker build -t flask-tea .
+
+# 运行Docker容器
+docker run -d -p 5000:5000 --name flask-tea flask-tea
 ```
 
 ## 前端调用
