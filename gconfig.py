@@ -14,7 +14,7 @@ daemon = False
 # 修改代码是否重启
 reload = True
 debug = False
-bind = '127.0.0.1:5000'
+bind = '0.0.0.0:5000'
 worker_class = 'gevent'
 loglevel = 'info'
 pidfile = 'log/gunicorn.pid'
