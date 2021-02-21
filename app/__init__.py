@@ -50,9 +50,11 @@ def register_logging(app):
     app.logger.addHandler(handler)
 
     @app.before_first_request
-    def setup_logging():
+    def prod_logging():
         if not app.debug:
-            app.logger.addHandler(logging.StreamHandler())
+            stream_handler = logging.StreamHandler()
+            stream_handler.setFormatter(formatter)
+            app.logger.addHandler(stream_handler)
             app.logger.setLevel(app.config['LOG_LEVEL'])
 
 
