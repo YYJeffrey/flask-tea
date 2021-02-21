@@ -29,7 +29,7 @@ def create_app():
     register_config(app)
     register_logging(app)
     register_extension(app)
-    register_request(app)
+    register_header(app)
     register_exception(app)
     register_encoder(app)
     register_resource(app)
@@ -64,7 +64,7 @@ def register_extension(app):
     cors.init_app(app)
 
 
-def register_request(app):
+def register_header(app):
     @app.before_request
     def header_validator():
         if 'APP_NAME' in app.config:
