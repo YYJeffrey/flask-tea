@@ -15,10 +15,13 @@ db = SQLAlchemy(query_class=BaseQuery)
 
 
 class BaseModel(db.Model):
+    """
+    基础模型
+    """
     __abstract__ = True
 
     id = Column('id', String(36), default=lambda: uuid4().hex, primary_key=True, comment='主键标识')
-    create_time = Column('create_time', DateTime, server_default=func.now(), comment='创建时间')
+    create_time = Column('create_time', DateTime, server_default=func.now(), comment='创建时间', index=True)
     update_time = Column('update_time', DateTime, onupdate=func.now(), comment='更新时间')
     delete_time = Column('delete_time', DateTime, comment='删除时间')
 

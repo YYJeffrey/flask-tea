@@ -11,6 +11,9 @@ from app.model.base import BaseModel
 
 
 class User(BaseModel):
+    """
+    用户模型
+    """
     __tablename__ = 'user'
 
     username = Column(String(32), unique=True, nullable=False, comment='用户名', index=True)

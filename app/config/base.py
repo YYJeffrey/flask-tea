@@ -7,17 +7,20 @@ import os
 
 
 class BaseConfig(object):
-    # --- 基础配置 ---
+    """
+    基础配置
+    """
+    # --- 接口相关 ---
     # APP名称 用于请求头校验
     APP_NAME = os.getenv('APP_NAME', 'FLASK-TEA')
     # 是否按REST风格返回状态码
     RESTFUL_HTTP_CODE = False
 
-    # --- 密钥配置 ---
+    # --- 密钥相关 ---
     SECRET_KEY = os.getenv('SECRET_KEY', 'Hello, Flask-Tea!!!')
     EXPIRES_IN = 86400 * 7
 
-    # --- SQLAlchemy配置 ---
+    # --- SQLAlchemy相关 ---
     SQLALCHEMY_DATABASE_URI = os.getenv(
         'SQLALCHEMY_DATABASE_URI',
         'mysql+cymysql://root:123456@127.0.0.1:3306/tea?charset=utf8mb4'
