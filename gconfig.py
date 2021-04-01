@@ -11,7 +11,7 @@ monkey.patch_all()
 
 # 是否守护进程
 daemon = False
-# 修改代码是否重启
+# 是否热部署代码
 reload = True
 debug = False
 bind = '0.0.0.0:5000'
