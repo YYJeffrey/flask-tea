@@ -17,8 +17,11 @@ Flask Web API Wheel.
   - /static 静态资源目录
   - /template 模板目录
   - /validator 校验包
+- /log 日志目录
 - .flaskenv Flask环境变量文件
 - .env 专属环境变量文件
+- gconfig.py gunicorn配置
+- Pipfile Pipenv依赖配置
 - starter.py 启动文件
 
 **包名规范：** 一律使用小写单数形式
@@ -94,7 +97,7 @@ pipenv lock -r >> requirements.txt
 docker build -t flask-tea .
 
 # 运行Docker容器
-docker run -d -p 5000:5000 --name flask-tea flask-tea
+docker run -d -p 5000:5000 -v $(pwd):/root/flask-tea -e FLASK_ENV=production --name flask-tea flask-tea
 ```
 
 ## 前端调用
