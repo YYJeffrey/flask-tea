@@ -27,9 +27,9 @@ class Form(_Form):
         if not valid:
             msg = ''
             for index, item in enumerate(self.errors.values()):
-                msg = msg + ';'.join(item)
+                msg += ';'.join(item)
                 if index != len(self.errors.values()) - 1:
-                    msg = msg + ';'
+                    msg += ';'
             raise ParameterError(msg=msg)
         return self
 

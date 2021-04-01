@@ -4,7 +4,6 @@
     :license: MIT, see LICENSE for more details.
 """
 from flask import json, current_app
-from werkzeug._compat import text_type
 from werkzeug.exceptions import HTTPException
 
 
@@ -40,8 +39,7 @@ class APIException(HTTPException):
             msg=self.msg,
             data=self.data
         )
-        text = json.dumps(body)
-        return text_type(text)
+        return json.dumps(body)
 
     def get_headers(self, environ=None):
         return [(k, v) for k, v in self.headers.items()]

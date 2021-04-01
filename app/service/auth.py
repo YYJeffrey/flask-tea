@@ -12,6 +12,11 @@ from app.lib.token import generate_token
 
 
 def password_auth(username, password):
+    """
+    密码校验授权
+    @param username: 用户名
+    @param password: 密码
+    """
     user = User.get_one(username=username)
     if not user:
         raise NotFound

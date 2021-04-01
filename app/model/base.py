@@ -101,7 +101,7 @@ class BaseModel(db.Model):
 
     def delete(self, commit: bool = True, soft: bool = True):
         """
-        删除 默认使用软删除
+        删除 默认软删除
         """
         if soft:
             self.delete_time = func.now()

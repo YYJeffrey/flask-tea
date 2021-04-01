@@ -10,7 +10,7 @@ from .base import BaseConfig
 
 class ProductionConfig(BaseConfig):
     """
-    生成模式配置
+    生成环境配置
     """
     LOG_LEVEL = logging.INFO
     # 是否启用SQL语句回显
