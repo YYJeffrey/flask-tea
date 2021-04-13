@@ -42,11 +42,10 @@ Flask Web API Wheel.
 
 3. 配置Pycharm
 
-    将以下环节变量配置在Pycharm启动项下或系统环境变量下
+    将以下环境变量配置在Pycharm启动项或系统环境变量下
 
     |参数|作用|
     |---|---|
-    |APP_NAME|应用名称|
     |SECRET_KEY|项目密钥|
     |SQLALCHEMY_DATABASE_URI|数据库URI|
     
