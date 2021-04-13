@@ -13,6 +13,8 @@ class BaseConfig(object):
     # --- 接口相关 ---
     # APP名称 用于请求头校验
     APP_NAME = os.getenv('APP_NAME', 'FLASK-TEA')
+    # 不校验请求头的路由 用于放行回调请求
+    ALLOWED_PATH = []
     # 是否按REST风格返回状态码
     RESTFUL_HTTP_CODE = False
 

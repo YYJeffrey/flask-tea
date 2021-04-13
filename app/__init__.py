@@ -17,7 +17,7 @@ from .model.base import db
 from .model.user import User
 from .patch.encoder import JSONEncoder
 
-migrate = Migrate(db=db)
+migrate = Migrate(db=db, render_as_batch=True, compare_type=True, compare_server_default=True)
 cors = CORS(resources={'/*': {'origins': '*'}})
 
 
@@ -67,12 +67,12 @@ def register_extension(app):
 def register_header(app):
     @app.before_request
     def header_validator():
-        if 'APP_NAME' in app.config:
-            if 'X-App-Name' in request.headers:
-                if request.headers['X-App-Name'] != app.config['APP_NAME']:
-                    raise HeaderInvalid
-            else:
-                raise HeaderInvalid
+        if 'APP_NAME' not in app.config:
+            return
+        if request.path in app.config['ALLOWED_PATH'] or '*' in app.config['ALLOWED_PATH']:
+            return
+        if 'X-App-Name' not in request.headers or request.headers['X-App-Name'] != app.config['APP_NAME']:
+            raise HeaderInvalid
 
 
 def register_exception(app):
